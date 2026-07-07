@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'surah_model.dart';
+part of 'tafsir_source_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SurahModelAdapter extends TypeAdapter<SurahModel> {
+class TafsirSourceModelAdapter extends TypeAdapter<TafsirSourceModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  SurahModel read(BinaryReader reader) {
+  TafsirSourceModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SurahModel();
+    return TafsirSourceModel();
   }
 
   @override
-  void write(BinaryWriter writer, SurahModel obj) {
+  void write(BinaryWriter writer, TafsirSourceModel obj) {
     writer.writeByte(0);
   }
 
@@ -30,7 +30,7 @@ class SurahModelAdapter extends TypeAdapter<SurahModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SurahModelAdapter &&
+      other is TafsirSourceModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

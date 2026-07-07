@@ -7,12 +7,15 @@ import 'core/di/service_locator.dart' as di;
 import 'features/quran/presentation/screens/home_screen.dart';
 import 'features/quran/presentation/bloc/surah_cubit.dart';
 import 'features/quran/data/models/surah_model.dart';
+import 'features/auth/presentation/screens/auth_screen.dart';
+import 'features/auth/presentation/bloc/auth_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Hive.initFlutter();
   Hive.registerAdapter(SurahModelAdapter());
+  Hive.registerAdapter(TafsirSourceModelAdapter());
   
   await di.init();
   runApp(const QuranApp());
@@ -23,25 +26,39 @@ class QuranApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Quran App',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<AuthCubit>()),
       ],
-      supportedLocales: const [
-        Locale('ar', 'SA'),
-        Locale('en', 'US'),
-      ],
-      locale: const Locale('ar', 'SA'),
-      home: BlocProvider(
-        create: (_) => di.sl<SurahCubit>()..fetchSurahs(),
-        child: const HomeScreen(),
+      child: MaterialApp(
+        title: 'Quran App',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ar', 'SA'),
+          Locale('en', 'US'),
+        ],
+        locale: const Locale('ar', 'SA'),
+        home: const AuthScreen(),
       ),
+    );
+  }
+}
+
+class QuranAppMain extends StatelessWidget {
+  const QuranAppMain({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => di.sl<SurahCubit>()..fetchSurahs(),
+      child: const HomeScreen(),
     );
   }
 }

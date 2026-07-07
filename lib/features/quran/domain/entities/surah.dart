@@ -8,11 +8,11 @@ class Surah extends Equatable {
   final int totalVerses;
 
   const Surah({
-    required this.id,
-    required this.nameAr,
-    required this.nameEn,
-    required this.revelationType,
-    required this.totalVerses,
+    this.id = 0,
+    this.nameAr = '',
+    this.nameEn = '',
+    this.revelationType = '',
+    this.totalVerses = 0,
   });
 
   @override
