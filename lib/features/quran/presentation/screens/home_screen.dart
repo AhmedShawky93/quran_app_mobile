@@ -1,17 +1,16 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_app_mobile/core/di/service_locator.dart';
-import '../bloc/surah_cubit.dart';
-import '../bloc/surah_state.dart';
-import '../bloc/verse_cubit.dart';
-import '../bloc/bookmark_cubit.dart';
-import '../bloc/reading_progress_cubit.dart';
-import 'package:quran_app_mobile/features/auth/presentation/bloc/auth_cubit.dart';
-import 'package:quran_app_mobile/features/auth/presentation/bloc/auth_state.dart';
-import 'surah_reader_screen.dart';
-import 'package:quran_app_mobile/features/quran/domain/entities/reading_progress.dart';
+import 'package:quran_app_mobile/features/quran/presentation/bloc/surah_cubit.dart';
+import 'package:quran_app_mobile/features/quran/presentation/bloc/surah_state.dart';
+import 'package:quran_app_mobile/features/quran/presentation/bloc/verse_cubit.dart';
+import 'package:quran_app_mobile/features/quran/presentation/bloc/bookmark_cubit.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/reading_progress_cubit.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/reading_progress_state.dart';
+import 'package:quran_app_mobile/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:quran_app_mobile/features/auth/presentation/bloc/auth_state.dart';
+import 'package:quran_app_mobile/features/quran/presentation/screens/surah_reader_screen.dart';
+import 'package:quran_app_mobile/features/quran/domain/entities/reading_progress.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,59 +40,64 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<ReadingProgressCubit, ReadingProgressState>(
         builder: (context, readingProgressState) {
           return BlocBuilder<SurahCubit, SurahState>(
-        builder: (context, state) {
-          if (state is SurahLoading || state is SurahInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is SurahError) {
-            return Center(child: Text('Error: ${state.message}'));
-          } else if (state is SurahLoaded) {
-            final surahs = state.surahs;
-            return ListView.builder(
-              itemCount: surahs.length,
-              itemBuilder: (context, index) {
-                final surah = surahs[index];
-                ReadingProgress? progress;
-                if (readingProgressState is ReadingProgressLoaded) {
-                  progress = readingProgressState.readingProgress;
-                }
+            builder: (context, state) {
+              if (state is SurahLoading || state is SurahInitial) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is SurahError) {
+                return Center(child: Text('Error: ${state.message}'));
+              } else if (state is SurahLoaded) {
+                final surahs = state.surahs;
+                return ListView.builder(
+                  itemCount: surahs.length,
+                  itemBuilder: (context, index) {
+                    final surah = surahs[index];
+                    ReadingProgress? progress;
+                    if (readingProgressState is ReadingProgressLoaded) {
+                      progress = readingProgressState.readingProgress;
+                    }
 
-                return ListTile(
-                  leading: CircleAvatar(child: Text(surah.id.toString())),
-                  title: Text(surah.nameAr),
-                  subtitle: Text('${surah.revelationType} - ${surah.totalVerses} آية'),
-                  trailing: Text(surah.nameEn),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider(create: (context) => sl<VerseCubit>()..fetchVerses(surah.id)),
-                            BlocProvider(create: (context) {
-                              final authState = context.read<AuthCubit>().state;
-                              if (authState is Authenticated) {
-                                return sl<BookmarkCubit>()..fetchBookmarks(authState.token);
-                              }
-                              return sl<BookmarkCubit>(); // Return an uninitialized cubit for unauthenticated users
-                            }),
-                            BlocProvider(create: (context) {
-                              final authState = context.read<AuthCubit>().state;
-                              if (authState is Authenticated) {
-                                return sl<ReadingProgressCubit>()..loadReadingProgress(authState.token);
-                              }
-                              return sl<ReadingProgressCubit>(); // Return an uninitialized cubit for unauthenticated users
-                            }),
-                          ],
-                          child: SurahReaderScreen(surah: surah, initialVerseId: (progress?.lastSurahId == surah.id) ? progress?.lastVerseId : null),
-                        ),
-                      ),
+                    return ListTile(
+                      leading: CircleAvatar(child: Text(surah.id.toString())),
+                      title: Text(surah.nameAr),
+                      subtitle: Text('${surah.revelationType} - ${surah.totalVerses} آية'),
+                      trailing: Text(surah.nameEn),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider(create: (context) => sl<VerseCubit>()..fetchVerses(surah.id)),
+                                BlocProvider(create: (context) {
+                                  final authState = context.read<AuthCubit>().state;
+                                  if (authState is Authenticated) {
+                                    return sl<BookmarkCubit>()..fetchBookmarks(authState.token);
+                                  }
+                                  return sl<BookmarkCubit>();
+                                }),
+                                BlocProvider(create: (context) {
+                                  final authState = context.read<AuthCubit>().state;
+                                  if (authState is Authenticated) {
+                                    return sl<ReadingProgressCubit>()..loadReadingProgress(authState.token);
+                                  }
+                                  return sl<ReadingProgressCubit>();
+                                }),
+                              ],
+                              child: SurahReaderScreen(
+                                surah: surah,
+                                initialVerseId: (progress?.lastSurahId == surah.id) ? progress?.lastVerseId : null,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
-              },
-            );
-          }
-          return const SizedBox.shrink();
+              }
+              return const SizedBox.shrink();
+            },
+          );
         },
       ),
     );

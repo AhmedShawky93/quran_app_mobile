@@ -5,13 +5,30 @@ part 'surah_model.g.dart';
 
 @HiveType(typeId: 0)
 class SurahModel extends Surah {
+  @HiveField(0)
+  final int id;
+  @HiveField(1)
+  final String nameAr;
+  @HiveField(2)
+  final String nameEn;
+  @HiveField(3)
+  final String revelationType;
+  @HiveField(4)
+  final int totalVerses;
+
   const SurahModel({
-    @HiveField(0) required super.id,
-    @HiveField(1) required super.nameAr,
-    @HiveField(2) required super.nameEn,
-    @HiveField(3) required super.revelationType,
-    @HiveField(4) required super.totalVerses,
-  });
+    required this.id,
+    required this.nameAr,
+    required this.nameEn,
+    required this.revelationType,
+    required this.totalVerses,
+  }) : super(
+          id: id,
+          nameAr: nameAr,
+          nameEn: nameEn,
+          revelationType: revelationType,
+          totalVerses: totalVerses,
+        );
 
   factory SurahModel.fromJson(Map<String, dynamic> json) {
     return SurahModel(

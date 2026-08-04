@@ -1,41 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bookmark_model.dart';
+part of 'reading_progress_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BookmarkModelAdapter extends TypeAdapter<BookmarkModel> {
+class ReadingProgressModelAdapter extends TypeAdapter<ReadingProgressModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 3;
 
   @override
-  BookmarkModel read(BinaryReader reader) {
+  ReadingProgressModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BookmarkModel(
-      id: fields[0] as String,
-      userId: fields[1] as String,
-      verseId: fields[2] as int,
-      createdAt: fields[3] as DateTime,
+    return ReadingProgressModel(
+      userId: fields[0] as String,
+      lastSurahId: fields[1] as int,
+      lastVerseId: fields[2] as int,
+      updatedAt: fields[3] as DateTime,
     );
   }
 
   @override
-  void write(BinaryWriter writer, BookmarkModel obj) {
+  void write(BinaryWriter writer, ReadingProgressModel obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
       ..write(obj.userId)
+      ..writeByte(1)
+      ..write(obj.lastSurahId)
       ..writeByte(2)
-      ..write(obj.verseId)
+      ..write(obj.lastVerseId)
       ..writeByte(3)
-      ..write(obj.createdAt);
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -44,7 +44,7 @@ class BookmarkModelAdapter extends TypeAdapter<BookmarkModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BookmarkModelAdapter &&
+      other is ReadingProgressModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

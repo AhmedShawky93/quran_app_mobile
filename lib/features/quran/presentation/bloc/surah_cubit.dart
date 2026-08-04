@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/get_surahs_usecase.dart';
+import 'package:quran_app_mobile/features/quran/domain/usecases/get_surahs_usecase.dart';
 import 'surah_state.dart';
 
 class SurahCubit extends Cubit<SurahState> {

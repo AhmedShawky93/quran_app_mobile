@@ -5,7 +5,7 @@ abstract class SurahState extends Equatable {
   const SurahState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class SurahInitial extends SurahState {}
@@ -18,7 +18,7 @@ class SurahLoaded extends SurahState {
   const SurahLoaded(this.surahs);
 
   @override
-  List<Object> get props => [surahs];
+  List<Object?> get props => [surahs];
 }
 
 class SurahError extends SurahState {
@@ -27,5 +27,5 @@ class SurahError extends SurahState {
   const SurahError(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

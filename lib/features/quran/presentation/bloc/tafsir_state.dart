@@ -25,11 +25,12 @@ class TafsirSourcesLoaded extends TafsirState {
 class VerseTafsirLoaded extends TafsirState {
   final String tafsirText;
   final TafsirSource selectedSource;
+  final List<TafsirSource> sources;
 
-  const VerseTafsirLoaded(this.tafsirText, this.selectedSource);
+  const VerseTafsirLoaded(this.tafsirText, this.selectedSource, this.sources);
 
   @override
-  List<Object?> get props => [tafsirText, selectedSource];
+  List<Object?> get props => [tafsirText, selectedSource, sources];
 }
 
 class TafsirError extends TafsirState {
