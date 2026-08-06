@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran_app_mobile/core/theme/app_theme.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/surah.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/verse.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/tafsir_source.dart';
@@ -20,8 +21,10 @@ class TafsirDisplayWidget extends StatelessWidget {
       maxChildSize: 0.9,
       expand: false,
       builder: (BuildContext context, ScrollController scrollController) {
-        return Column(
-          children: [
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Column(
+            children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -30,7 +33,11 @@ class TafsirDisplayWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'تفسير الآية ${verse.verseNumber} من سورة ${surah.nameAr}',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.quranGold,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -52,18 +59,22 @@ class TafsirDisplayWidget extends StatelessWidget {
                           value: selectedSource?.id,
                           onChanged: (int? newValue) {
                             if (newValue != null) {
-                              final selected = sources.firstWhere((s) => s.id == newValue);
+                              final selected = sources.firstWhere(
+                                (s) => s.id == newValue,
+                              );
                               final cubit = context.read<TafsirCubit>();
                               cubit.selectTafsirSource(selected);
                               cubit.getVerseTafsir(verse.id);
                             }
                           },
-                          items: sources.map<DropdownMenuItem<int>>((TafsirSource source) {
+                          items: sources.map<DropdownMenuItem<int>>(
+                            (TafsirSource source) {
                             return DropdownMenuItem<int>(
                               value: source.id,
                               child: Text(source.name),
                             );
-                          }).toList(),
+                            },
+                          ).toList(),
                         );
                       }
                       return const SizedBox.shrink();
@@ -86,7 +97,7 @@ class TafsirDisplayWidget extends StatelessWidget {
                       child: Text(
                         state.tafsirText,
                         textAlign: TextAlign.right,
-                        style: const TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18, height: 1.8),
                       ),
                     );
                   } else if (state is TafsirSourcesLoaded) {
@@ -95,13 +106,14 @@ class TafsirDisplayWidget extends StatelessWidget {
                         context.read<TafsirCubit>().getVerseTafsir(verse.id);
                       });
                     }
-                    return const Center(child: Text('Select a Tafsir source.'));
+                    return const Center(child: Text('اختر مصدر التفسير.'));
                   }
                   return const SizedBox.shrink();
                 },
               ),
             ),
-          ],
+            ],
+          ),
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_app_mobile/core/di/service_locator.dart';
+import 'package:quran_app_mobile/core/theme/app_theme.dart';
 import 'package:quran_app_mobile/core/network/audio_player_service.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/surah.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/verse.dart';
@@ -79,29 +80,50 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
               itemCount: verses.length,
-              separatorBuilder: (context, index) => const Divider(),
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final verse = verses[index];
-                return ListTile(
-                  title: Text(
-                    verse.textUthmani,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontFamily: 'Uthmanic',
+                return Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(22),
+                    onTap: () {
+                      _showVerseActions(context, verse, widget.surah);
+                      final authState = context.read<AuthCubit>().state;
+                      if (authState is Authenticated) {
+                        context.read<ReadingProgressCubit>().saveReadingProgress(
+                              authState.token,
+                              widget.surah.id,
+                              verse.id,
+                            );
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            verse.textUthmani,
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            style: AppTheme.quranTextStyle,
+                          ),
+                          const SizedBox(height: 12),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppTheme.quranGold),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text('﴿${verse.verseNumber}﴾'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  subtitle: Text(
-                    '(${verse.verseNumber})',
-                    textAlign: TextAlign.left,
-                  ),
-                  onTap: () {
-                    _showVerseActions(context, verse, widget.surah);
-                    final authState = context.read<AuthCubit>().state;
-                    if (authState is Authenticated) {
-                      context.read<ReadingProgressCubit>().saveReadingProgress(authState.token, widget.surah.id, verse.id);
-                    }
-                  },
                 );
               },
             );
@@ -116,8 +138,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Wrap(
-          children: [
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: SafeArea(
+            child: Wrap(
+              children: [
             ListTile(
               leading: const Icon(Icons.play_arrow),
               title: const Text('استماع'),
@@ -195,7 +220,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 Navigator.pop(context);
               },
             ),
-          ],
+              ],
+            ),
+          ),
         );
       },
     );
