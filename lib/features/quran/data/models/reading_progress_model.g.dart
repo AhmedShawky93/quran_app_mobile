@@ -1,44 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'surah_model.dart';
+part of 'reading_progress_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SurahModelAdapter extends TypeAdapter<SurahModel> {
+class ReadingProgressModelAdapter extends TypeAdapter<ReadingProgressModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 3;
 
   @override
-  SurahModel read(BinaryReader reader) {
+  ReadingProgressModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SurahModel(
-      id: fields[0] as int,
-      nameAr: fields[1] as String,
-      nameEn: fields[2] as String,
-      revelationType: fields[3] as String,
-      totalVerses: fields[4] as int,
+    return ReadingProgressModel(
+      userId: fields[0] as String,
+      lastSurahId: fields[1] as int,
+      lastVerseId: fields[2] as int,
+      updatedAt: fields[3] as DateTime,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SurahModel obj) {
+  void write(BinaryWriter writer, ReadingProgressModel obj) {
     writer
-      ..writeByte(5)
-      ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.nameAr)
-      ..writeByte(2)
-      ..write(obj.nameEn)
-      ..writeByte(3)
-      ..write(obj.revelationType)
       ..writeByte(4)
-      ..write(obj.totalVerses);
+      ..writeByte(0)
+      ..write(obj.userId)
+      ..writeByte(1)
+      ..write(obj.lastSurahId)
+      ..writeByte(2)
+      ..write(obj.lastVerseId)
+      ..writeByte(3)
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -47,7 +44,7 @@ class SurahModelAdapter extends TypeAdapter<SurahModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SurahModelAdapter &&
+      other is ReadingProgressModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

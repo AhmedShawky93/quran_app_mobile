@@ -7,7 +7,6 @@ import 'package:quran_app_mobile/features/quran/domain/entities/verse.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/verse_cubit.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/verse_state.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/tafsir_cubit.dart';
-import 'package:quran_app_mobile/features/quran/presentation/bloc/tafsir_state.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/bookmark_cubit.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/bookmark_state.dart';
 import 'package:quran_app_mobile/features/auth/presentation/bloc/auth_cubit.dart';
@@ -33,16 +32,13 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.initialVerseId != null) {
-        _scrollToVerse(widget.initialVerseId!); // Scroll to the initial verse if provided
+        _scrollToVerse(widget.initialVerseId!);
       }
     });
   }
 
   void _scrollToVerse(int verseId) {
-    // This is a simplified scroll. A more robust solution would calculate item heights.
-    // For now, we assume each verse item has a roughly equal height.
-    // A better approach would be to use GlobalKey for each verse item and scroll to its context.
-    final double itemHeight = 60.0; // Approximate height of a verse ListTile
+    final double itemHeight = 60.0;
     final double offset = (verseId - 1) * itemHeight;
     _scrollController.animateTo(
       offset,
@@ -101,7 +97,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   ),
                   onTap: () {
                     _showVerseActions(context, verse, widget.surah);
-                    // Save reading progress
                     final authState = context.read<AuthCubit>().state;
                     if (authState is Authenticated) {
                       context.read<ReadingProgressCubit>().saveReadingProgress(authState.token, widget.surah.id, verse.id);
@@ -129,14 +124,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               onTap: () async {
                 Navigator.pop(context);
                 try {
-                  // Assuming ApiClient is registered in service locator
-                  // final apiClient = sl<ApiClient>();
-                  // final response = await apiClient.dio.get('quran/verses/${verse.id}/audio');
-                  // if (response.statusCode == 200) {
-                  //   final audioUrl = response.data['url'];
-                  //   await sl<AudioPlayerService>().playUrl(audioUrl);
-                  // }
-                  // For now, let's use a placeholder audio URL
                   await sl<AudioPlayerService>().playUrl('https://download.quranicaudio.com/quran/abdullah_basfar/001005.mp3');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -171,7 +158,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         title: Text(isBookmarked ? "إزالة العلامة" : "حفظ في العلامات"),
                         onTap: () {
                           Navigator.pop(context);
-                          final userId = (authState as Authenticated).token;
+                          final userId = authState.token;
                           if (isBookmarked) {
                             context.read<BookmarkCubit>().removeBookmark(userId, verse.id);
                           } else {
@@ -198,7 +185,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               leading: const Icon(Icons.share),
               title: const Text('مشاركة'),
               onTap: () {
-                // Share verse
                 Navigator.pop(context);
               },
             ),
@@ -206,7 +192,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               leading: const Icon(Icons.copy),
               title: const Text('نسخ'),
               onTap: () {
-                // Copy verse
                 Navigator.pop(context);
               },
             ),

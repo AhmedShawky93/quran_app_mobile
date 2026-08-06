@@ -2,7 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_cubit.dart';
 import '../bloc/auth_state.dart';
-import 'package:quran_app_mobile/main.dart';
+import 'package:quran_app_mobile/features/quran/presentation/screens/home_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -12,9 +12,9 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is Authenticated) {
+          if (state is Authenticated || state is GuestMode) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const QuranAppMain()),
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
             );
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -70,7 +70,7 @@ class AuthScreen extends StatelessWidget {
                         label: const Text('تسجيل بالهاتف'),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(250, 50),
-                          backgroundColor: Colors.white.withOpacity(0.9),
+                          backgroundColor: Colors.white.withAlpha(230),
                           foregroundColor: Colors.blue,
                         ),
                         onPressed: () {

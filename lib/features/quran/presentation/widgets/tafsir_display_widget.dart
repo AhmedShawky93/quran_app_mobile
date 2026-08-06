@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/surah.dart';
 import 'package:quran_app_mobile/features/quran/domain/entities/verse.dart';
+import 'package:quran_app_mobile/features/quran/domain/entities/tafsir_source.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/tafsir_cubit.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/tafsir_state.dart';
 
@@ -26,41 +27,38 @@ class TafsirDisplayWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'تفسير الآية ${verse.verseNumber} من سورة ${surah.nameAr}',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      'تفسير الآية ${verse.verseNumber} من سورة ${surah.nameAr}',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   BlocBuilder<TafsirCubit, TafsirState>(
                     builder: (context, state) {
+                      List<TafsirSource> sources = [];
+                      TafsirSource? selectedSource;
+
                       if (state is TafsirSourcesLoaded) {
-                        return DropdownButton<int>(
-                          value: state.selectedSource?.id,
-                          onChanged: (int? newValue) {
-                            if (newValue != null) {
-                              final selected = state.sources.firstWhere((s) => s.id == newValue);
-                              context.read<TafsirCubit>().selectTafsirSource(selected);
-                              context.read<TafsirCubit>().getVerseTafsir(verse.id);
-                            }
-                          },
-                          items: state.sources.map<DropdownMenuItem<int>>((TafsirSource source) {
-                            return DropdownMenuItem<int>(
-                              value: source.id,
-                              child: Text(source.name),
-                            );
-                          }).toList(),
-                        );
+                        sources = state.sources;
+                        selectedSource = state.selectedSource;
                       } else if (state is VerseTafsirLoaded) {
+                        sources = state.sources;
+                        selectedSource = state.selectedSource;
+                      }
+
+                      if (sources.isNotEmpty) {
                         return DropdownButton<int>(
-                          value: state.selectedSource.id,
+                          value: selectedSource?.id,
                           onChanged: (int? newValue) {
                             if (newValue != null) {
+                              final selected = sources.firstWhere((s) => s.id == newValue);
                               final cubit = context.read<TafsirCubit>();
-                              final selected = (cubit.state as TafsirSourcesLoaded).sources.firstWhere((s) => s.id == newValue);
                               cubit.selectTafsirSource(selected);
                               cubit.getVerseTafsir(verse.id);
                             }
                           },
-                          items: (context.read<TafsirCubit>().state as TafsirSourcesLoaded).sources.map<DropdownMenuItem<int>>((TafsirSource source) {
+                          items: sources.map<DropdownMenuItem<int>>((TafsirSource source) {
                             return DropdownMenuItem<int>(
                               value: source.id,
                               child: Text(source.name),
@@ -92,12 +90,11 @@ class TafsirDisplayWidget extends StatelessWidget {
                       ),
                     );
                   } else if (state is TafsirSourcesLoaded) {
-                    // If sources are loaded but no tafsir yet, trigger fetch for the first source
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (state.selectedSource != null) {
+                    if (state.selectedSource != null) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
                         context.read<TafsirCubit>().getVerseTafsir(verse.id);
-                      }
-                    });
+                      });
+                    }
                     return const Center(child: Text('Select a Tafsir source.'));
                   }
                   return const SizedBox.shrink();

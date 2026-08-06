@@ -3,14 +3,28 @@ import '../../domain/entities/bookmark.dart';
 
 part 'bookmark_model.g.dart';
 
-@HiveType(typeId: 2) // Ensure unique typeId
+@HiveType(typeId: 2)
 class BookmarkModel extends Bookmark {
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String userId;
+  @HiveField(2)
+  final int verseId;
+  @HiveField(3)
+  final DateTime createdAt;
+
   const BookmarkModel({
-    @HiveField(0) required super.id,
-    @HiveField(1) required super.userId,
-    @HiveField(2) required super.verseId,
-    @HiveField(3) required super.createdAt,
-  });
+    required this.id,
+    required this.userId,
+    required this.verseId,
+    required this.createdAt,
+  }) : super(
+          id: id,
+          userId: userId,
+          verseId: verseId,
+          createdAt: createdAt,
+        );
 
   factory BookmarkModel.fromJson(Map<String, dynamic> json) {
     return BookmarkModel(

@@ -20,6 +20,8 @@ class Authenticated extends AuthState {
   List<Object?> get props => [token, provider];
 }
 
+class GuestMode extends AuthState {}
+
 class Unauthenticated extends AuthState {}
 
 class AuthError extends AuthState {

@@ -36,7 +36,7 @@ class TafsirCubit extends Cubit<TafsirState> {
     emit(TafsirLoading());
     try {
       final tafsirText = await getVerseTafsirUseCase(verseId, _selectedSource!.id);
-      emit(VerseTafsirLoaded(tafsirText, _selectedSource!));
+      emit(VerseTafsirLoaded(tafsirText, _selectedSource!, _tafsirSources));
     } catch (e) {
       emit(TafsirError(e.toString()));
     }
