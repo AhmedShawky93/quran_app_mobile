@@ -1,9 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/di/service_locator.dart' as di;
+import 'core/theme/app_theme.dart';
 
 import 'features/quran/presentation/screens/home_screen.dart';
 import 'features/quran/presentation/bloc/surah_cubit.dart';
@@ -52,10 +53,9 @@ class QuranApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Quran App',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          useMaterial3: true,
-        ),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.light,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
