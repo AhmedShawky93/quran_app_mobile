@@ -51,7 +51,7 @@ class AppTheme {
       ),
       iconTheme: const IconThemeData(color: quranGold),
       dividerTheme: const DividerThemeData(color: quranGold, thickness: 0.5),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceGreen,
         elevation: 0,
         shape: RoundedRectangleBorder(
