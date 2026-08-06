@@ -1,5 +1,7 @@
 import '../../domain/entities/surah.dart';
 import '../../domain/entities/verse.dart';
+import '../../domain/entities/bookmark.dart';
+import '../../domain/entities/reading_progress.dart';
 import '../../domain/repositories/quran_repository.dart';
 import '../../domain/entities/tafsir_source.dart';
 import '../models/tafsir_source_model.dart';
@@ -26,7 +28,9 @@ class QuranRepositoryImpl implements QuranRepository {
       if (localSurahs.isNotEmpty) {
         return localSurahs;
       }
-      throw Exception('Failed to fetch surahs and no local cache available: $e');
+      throw Exception(
+        'Failed to fetch surahs and no local cache available: $e',
+      );
     }
   }
 
@@ -54,23 +58,37 @@ class QuranRepositoryImpl implements QuranRepository {
       if (localTafsirSources.isNotEmpty) {
         return localTafsirSources;
       }
-      throw Exception('Failed to fetch tafsir sources and no local cache available: $e');
+      throw Exception(
+        'Failed to fetch tafsir sources and no local cache available: $e',
+      );
     }
   }
 
   @override
   Future<String> getVerseTafsir(int verseId, int tafsirSourceId) async {
     try {
-      final remoteTafsir = await remoteDataSource.getVerseTafsir(verseId, tafsirSourceId);
+      final remoteTafsir = await remoteDataSource.getVerseTafsir(
+        verseId,
+        tafsirSourceId,
+      );
       // Cache verse tafsir locally
-      await localDataSource.cacheVerseTafsir(verseId, tafsirSourceId, remoteTafsir);
+      await localDataSource.cacheVerseTafsir(
+        verseId,
+        tafsirSourceId,
+        remoteTafsir,
+      );
       return remoteTafsir;
     } catch (e) {
-      final localTafsir = await localDataSource.getVerseTafsir(verseId, tafsirSourceId);
+      final localTafsir = await localDataSource.getVerseTafsir(
+        verseId,
+        tafsirSourceId,
+      );
       if (localTafsir.isNotEmpty) {
         return localTafsir;
       }
-      throw Exception('Failed to fetch verse tafsir and no local cache available: $e');
+      throw Exception(
+        'Failed to fetch verse tafsir and no local cache available: $e',
+      );
     }
   }
 }

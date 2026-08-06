@@ -16,12 +16,26 @@ class BookmarkModelAdapter extends TypeAdapter<BookmarkModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BookmarkModel();
+    return BookmarkModel(
+      id: fields[0] as String,
+      userId: fields[1] as String,
+      verseId: fields[2] as int,
+      createdAt: fields[3] as DateTime,
+    );
   }
 
   @override
   void write(BinaryWriter writer, BookmarkModel obj) {
-    writer.writeByte(0);
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.userId)
+      ..writeByte(2)
+      ..write(obj.verseId)
+      ..writeByte(3)
+      ..write(obj.createdAt);
   }
 
   @override

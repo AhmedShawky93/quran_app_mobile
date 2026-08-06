@@ -16,12 +16,28 @@ class SurahModelAdapter extends TypeAdapter<SurahModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SurahModel();
+    return SurahModel(
+      id: fields[0] as int,
+      nameAr: fields[1] as String,
+      nameEn: fields[2] as String,
+      revelationType: fields[3] as String,
+      totalVerses: fields[4] as int,
+    );
   }
 
   @override
   void write(BinaryWriter writer, SurahModel obj) {
+    writer.writeByte(5);
     writer.writeByte(0);
+    writer.write(obj.id);
+    writer.writeByte(1);
+    writer.write(obj.nameAr);
+    writer.writeByte(2);
+    writer.write(obj.nameEn);
+    writer.writeByte(3);
+    writer.write(obj.revelationType);
+    writer.writeByte(4);
+    writer.write(obj.totalVerses);
   }
 
   @override

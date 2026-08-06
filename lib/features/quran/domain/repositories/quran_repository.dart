@@ -1,6 +1,8 @@
 import '../entities/surah.dart';
-
 import '../entities/verse.dart';
+import '../entities/tafsir_source.dart';
+import '../entities/bookmark.dart';
+import '../entities/reading_progress.dart';
 
 abstract class QuranRepository {
   Future<List<Surah>> getSurahs();
