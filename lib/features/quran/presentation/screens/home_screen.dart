@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_app_mobile/core/di/service_locator.dart';
+import 'package:quran_app_mobile/core/theme/app_theme.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/surah_cubit.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/surah_state.dart';
 import 'package:quran_app_mobile/features/quran/presentation/bloc/verse_cubit.dart';
@@ -48,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               } else if (state is SurahLoaded) {
                 final surahs = state.surahs;
                 return ListView.builder(
+                  padding: const EdgeInsets.all(16),
                   itemCount: surahs.length,
                   itemBuilder: (context, index) {
                     final surah = surahs[index];
@@ -56,12 +58,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       progress = readingProgressState.readingProgress;
                     }
 
-                    return ListTile(
-                      leading: CircleAvatar(child: Text(surah.id.toString())),
-                      title: Text(surah.nameAr),
-                      subtitle: Text('${surah.revelationType} - ${surah.totalVerses} آية'),
-                      trailing: Text(surah.nameEn),
-                      onTap: () {
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                        leading: CircleAvatar(
+                          backgroundColor: AppTheme.quranGold,
+                          foregroundColor: AppTheme.deepEmerald,
+                          child: Text(surah.id.toString()),
+                        ),
+                        title: Text(
+                          surah.nameAr,
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                        ),
+                        subtitle: Text(
+                          '${surah.revelationType} - ${surah.totalVerses} آية',
+                          textAlign: TextAlign.right,
+                        ),
+                        trailing: Text(surah.nameEn),
+                        onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -90,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      },
+                        },
+                      ),
                     );
                   },
                 );
