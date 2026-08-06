@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../models/surah_model.dart';
 import '../../../../core/network/api_client.dart';
 import '../models/tafsir_source_model.dart';
@@ -111,13 +113,23 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
 
   @override
   Future<ReadingProgressModel?> getReadingProgress(String userId) async {
-    final response = await apiClient.dio.get('readingprogress', queryParameters: {'userId': userId});
-    if (response.statusCode == 200) {
-      return ReadingProgressModel.fromJson(response.data);
-    } else if (response.statusCode == 404) {
-      return null;
-    } else {
+    try {
+      final response = await apiClient.dio.get(
+        'readingprogress',
+        queryParameters: {'userId': userId},
+      );
+
+      if (response.statusCode == 200) {
+        return ReadingProgressModel.fromJson(response.data);
+      }
+
       throw Exception('Failed to get reading progress');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        return null;
+      }
+
+      rethrow;
     }
   }
 }
