@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color emerald = Color(0xFF0B3D2E);
@@ -9,18 +8,28 @@ class AppTheme {
   static const Color quranGold = Color(0xFFD6B25E);
   static const Color brightGold = Color(0xFFF2D27A);
 
-  static TextStyle get quranTextStyle => GoogleFonts.amiriQuran(
-        color: brightGold,
-        fontSize: 26,
-        height: 2.1,
-        fontWeight: FontWeight.w500,
-      );
+  static const List<String> arabicFontFallback = [
+    'Amiri Quran',
+    'Amiri',
+    'Scheherazade New',
+    'Noto Naskh Arabic',
+    'Arial',
+  ];
+
+  static const TextStyle quranTextStyle = TextStyle(
+    color: brightGold,
+    fontSize: 26,
+    height: 2.1,
+    fontWeight: FontWeight.w500,
+    fontFamilyFallback: arabicFontFallback,
+  );
 
   static ThemeData get lightTheme {
     final base = ThemeData.light(useMaterial3: true);
-    final textTheme = GoogleFonts.cairoTextTheme(base.textTheme).apply(
+    final textTheme = base.textTheme.apply(
       bodyColor: quranGold,
       displayColor: quranGold,
+      fontFamilyFallback: arabicFontFallback,
     );
 
     return base.copyWith(
@@ -37,17 +46,18 @@ class AppTheme {
         error: const Color(0xFFFFB4AB),
       ),
       textTheme: textTheme,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0,
         backgroundColor: deepEmerald,
         foregroundColor: quranGold,
-        titleTextStyle: GoogleFonts.cairo(
+        titleTextStyle: TextStyle(
           color: quranGold,
           fontSize: 22,
           fontWeight: FontWeight.w800,
+          fontFamilyFallback: arabicFontFallback,
         ),
-        iconTheme: const IconThemeData(color: quranGold),
+        iconTheme: IconThemeData(color: quranGold),
       ),
       iconTheme: const IconThemeData(color: quranGold),
       dividerTheme: const DividerThemeData(color: quranGold, thickness: 0.5),
@@ -67,7 +77,10 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: quranGold,
           foregroundColor: deepEmerald,
-          textStyle: GoogleFonts.cairo(fontWeight: FontWeight.w800),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w800,
+            fontFamilyFallback: arabicFontFallback,
+          ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
@@ -79,9 +92,12 @@ class AppTheme {
         ),
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(color: quranGold),
-      snackBarTheme: SnackBarThemeData(
+      snackBarTheme: const SnackBarThemeData(
         backgroundColor: deepEmerald,
-        contentTextStyle: GoogleFonts.cairo(color: quranGold),
+        contentTextStyle: TextStyle(
+          color: quranGold,
+          fontFamilyFallback: arabicFontFallback,
+        ),
       ),
     );
   }
